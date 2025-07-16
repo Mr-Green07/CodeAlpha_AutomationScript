@@ -1,0 +1,36 @@
+// Function to re-enable pasting and disable blur/focus events on inputs and window
+function enablePastingAndDisableBlurFocus() {
+  // Disable onpaste for all input and textarea elements
+  document.querySelectorAll('input, textarea').forEach(el => {
+    el.onpaste = null;
+    el.addEventListener('paste', function(e) {
+      e.stopImmediatePropagation();
+    }, true);
+
+    // Disable onblur and onfocus for input and textarea elements
+    el.onblur = null;
+    el.addEventListener('blur', function(e) {
+      e.stopImmediatePropagation();
+    }, true);
+
+    el.onfocus = null;
+    el.addEventListener('focus', function(e) {
+      e.stopImmediatePropagation();
+    }, true);
+  });
+
+  // Disable window-level onblur and onfocus
+  window.onblur = null;
+  window.onfocus = null;
+}
+
+// Run on initial load
+enablePastingAndDisableBlurFocus();
+
+// Observe DOM changes and re-apply the changes when new elements are added
+const observer = new MutationObserver(() => {
+  enablePastingAndDisableBlurFocus();
+});
+
+// Start observing the document for changes
+observer.observe(document.body, { childList: true, subtree: true });
